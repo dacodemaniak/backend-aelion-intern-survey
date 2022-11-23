@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import survey.backend.dto.TraineeDto;
 import survey.backend.service.TraineeService;
 
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -55,7 +56,7 @@ public class TraineeController {
      * @return a trainee
      */
     @GetMapping("{id}")
-    public TraineeDto one(@PathVariable("id") int id){
+    public TraineeDto getById(@PathVariable("id") int id){
         Optional<TraineeDto> optTraineeDto = traineeService.findById(id);
         if (optTraineeDto.isPresent()){
             return optTraineeDto.get();
@@ -63,13 +64,6 @@ public class TraineeController {
             throw new IllegalArgumentException(
                     "Trainee with id " + id + " not found");
         }
-//        return Optional.empty();
-//        return Optional.of(TraineeDto.builder()
-//                .id(id)
-//                .lastName("Doe")
-//                .firstName("John")
-//                .birthDate(LocalDate.of(1900, 7, 1))
-//                .build());
     }
 
     /**
