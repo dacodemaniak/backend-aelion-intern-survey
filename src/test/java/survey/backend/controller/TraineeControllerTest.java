@@ -27,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TraineeController.class)
 class TraineeControllerTest {
 
+    final static String BASE_URL = "/api/trainee";
+
     // component to call TraineeController with HTTP requests
     @Autowired
     MockMvc mockMvc;
@@ -36,7 +38,7 @@ class TraineeControllerTest {
 
     @Test
     void testGetByIdOk() throws Exception {
-        // prepare
+        // 1. prepare
         int id = 123;
         var traineeDto = TraineeDto.builder()
                 .id(id)
@@ -47,26 +49,45 @@ class TraineeControllerTest {
         given(traineeService.findById(id))
                 .willReturn(Optional.of(traineeDto));
 
-        // when
+        // 2. when
         mockMvc.perform(
-                get("/api/trainee/123")
+                get(BASE_URL + "/" + id)
                         .accept(MediaType.APPLICATION_JSON)
                 )
-                // then/verify HTTP communication
+                // 3a. then/verify HTTP communication
                 .andDo(print()) // log request/response
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(id));
 
-        //  then/verify Mock service has been called
+        // 3b. then/verify Mock service has been called
         then(traineeService)
                 .should()
                 .findById(id);
     }
 
     @Test
-    void testGetByIdKoNotFound(){
-        fail();
+    void testGetByIdKoNotFound() throws Exception {
+        int id = 0;
+
+        given(traineeService.findById(id))
+                .willReturn(Optional.empty());
+
+        // 2. when
+        mockMvc.perform(
+                        get(BASE_URL + "/" + id)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                // 3a. then/verify HTTP communication
+                .andDo(print()) // log request/response
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.error").value("Trainee with id " + id + " not found"));
+
+        // 3b. then/verify Mock service has been called
+        then(traineeService)
+                .should()
+                .findById(id);
     }
 
 }
