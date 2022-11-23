@@ -68,7 +68,4 @@ class TraineeDtoTest {
                 () -> assertNull(traineeDto.getBirthdate(), "birthdate")
         );
     }
-
-
-
 }
