@@ -10,10 +10,10 @@ import java.time.LocalDate;
 public class TraineeDto {
 
     private Integer id;
-    private String lastName;
-    private String firstName;
+    private String lastname;
+    private String firstname;
     private String email;
     private String phoneNumber;
-    private LocalDate birthDate;
+    private LocalDate birthdate;
 
 }
