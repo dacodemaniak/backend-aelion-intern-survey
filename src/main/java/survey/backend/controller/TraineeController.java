@@ -26,28 +26,8 @@ public class TraineeController {
      * @return list of trainees
      */
     @GetMapping
-    public Set<TraineeDto> list(){
+    public Set<TraineeDto> getAll(){
         return traineeService.findAll();
-//        return Set.of(
-//                TraineeDto.builder()
-//                        .id(1)
-//                        .lastName("Doe")
-//                        .firstName("John")
-//                        .birthDate(LocalDate.of(1900, 1, 12))
-//                        .build(),
-//                TraineeDto.builder()
-//                        .id(12)
-//                        .lastName("Doe")
-//                        .firstName("Jane")
-//                        .birthDate(LocalDate.of(1920, 7, 6))
-//                        .build(),
-//                TraineeDto.builder()
-//                        .id(57)
-//                        .lastName("Unknown")
-//                        .firstName("John")
-//                        .birthDate(LocalDate.of(1952, 2, 29))
-//                        .build()
-//        );
     }
 
     /**
@@ -75,28 +55,19 @@ public class TraineeController {
      */
     @GetMapping("search")
     public Set<TraineeDto> search(
-            @RequestParam(name="fn", required = false) String firstname,
-            @RequestParam(name="ln", required = false) String lastname
+            @RequestParam(name="ln", required = false) String lastname,
+            @RequestParam(name="fn", required = false) String firstname
     ){
-        return Set.of(
-                TraineeDto.builder()
-                        .id(1)
-                        .lastname(Objects.isNull(lastname) ? "Found" : lastname)
-                        .firstname(Objects.isNull(firstname) ? "John" : firstname)
-                        .build(),
-                TraineeDto.builder()
-                        .id(12)
-                        .lastname("Found")
-                        .firstname("Jane")
-                        .build(),
-                TraineeDto.builder()
-                        .id(57)
-                        .lastname("Found")
-                        .firstname("Jim")
-                        .build()
-        );
+        // TODO: return 400 BAD REQUEST if both params are null
+        return traineeService.search(lastname, firstname);
     }
 
+    /**
+     * add new trainee with data in json body
+     * route: POST /api/trainee
+     * @param traineeDto
+     * @return trainee added/completed
+     */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TraineeDto add(@RequestBody TraineeDto traineeDto){
@@ -104,18 +75,28 @@ public class TraineeController {
     }
 
     /**
-     *
+     * update trainee with data in json body
+     * route: PUT /api/trainee
+     * @param traineeDto
+     * @return
+     */
+    @PutMapping
+    public TraineeDto update(@RequestBody TraineeDto traineeDto) {
+        return traineeService.update(traineeDto)
+                .orElseThrow(() -> NoDataFoundError.withId("Trainee", traineeDto.getId()));
+    }
+
+    /**
+     * delete trainee with its id
+     * route: DELETE /api/trainee/{id}
      * @param id
      */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int id) {
-        // TODO: delete this object if exists
+        if (!traineeService.delete(id)) {
+            throw NoDataFoundError.withId("Trainee", id);
+        }
     }
 
-    @PutMapping
-    public TraineeDto update(@RequestBody TraineeDto traineeDto) {
-        // TODO: update this object if exists and return it
-        return traineeDto;
-    }
 }

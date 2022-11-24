@@ -17,6 +17,6 @@ public class ErrorMessage {
 
     private String error;
 
-    private List<AbstractErrorDetailMessage> detail;
+    private List<AbstractErrorDetailMessage> details;
 
 }

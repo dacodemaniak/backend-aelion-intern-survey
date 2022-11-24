@@ -23,12 +23,12 @@ public interface TraineeService {
     /**
      * search trainees with criteria lastname, firstname ;
      * one criteria can be null, not both
-     * @param lastName
-     * @param firstName
+     * @param lastname
+     * @param firstname
      * @return trainee set with this lastname (if not null) and this firstname (if not null) ;
      * empty set if no trainee found with these criteria or both criteria are null
      */
-    Set<TraineeDto> search(String lastName, String firstName);
+    Set<TraineeDto> search(String lastname, String firstname);
 
     /**
      * add new trainee
