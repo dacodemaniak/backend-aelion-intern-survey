@@ -7,6 +7,10 @@ import java.util.Set;
 
 public interface TraineeService {
 
+    /**
+     * find all trainees
+     * @return all trainees
+     */
     Set<TraineeDto> findAll();
 
     /**
