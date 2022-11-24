@@ -1,6 +1,6 @@
 package survey.backend.error;
 
-public class NoDataFoundError extends AbstractError {
+public class NoDataFoundError extends RuntimeException {
 
     public NoDataFoundError(String message) {
         super(message);
