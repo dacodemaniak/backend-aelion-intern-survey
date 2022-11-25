@@ -12,6 +12,9 @@ import java.util.random.RandomGenerator;
 
 @Service
 public class DummyTraineeService implements TraineeService {
+
+    private static final RandomGenerator RANDOM_ID_GENERATOR = RandomGenerator.getDefault();
+
     @Override
     public Set<TraineeDto> findAll() {
         return Set.of(
@@ -58,23 +61,25 @@ public class DummyTraineeService implements TraineeService {
 
     @Override
     public Set<TraineeDto> search(String lastname, String firstname) {
+        final String DEFAULT_FAMILY = "found";
+        String dummyLlastname = Objects.isNull(lastname) ? DEFAULT_FAMILY : lastname;
         if (Objects.isNull(lastname) && Objects.isNull(firstname)){
             return Set.of();
         }
         return Set.of(
                 TraineeDto.builder()
                         .id(1)
-                        .lastname(Objects.isNull(lastname) ? "Found" : lastname)
+                        .lastname(dummyLlastname)
                         .firstname(Objects.isNull(firstname) ? "John" : firstname)
                         .build(),
                 TraineeDto.builder()
                         .id(12)
-                        .lastname(Objects.isNull(lastname) ? "Found" : lastname)
+                        .lastname(dummyLlastname)
                         .firstname(Objects.isNull(firstname) ? "Jane" : firstname)
                         .build(),
                 TraineeDto.builder()
                         .id(57)
-                        .lastname(Objects.isNull(lastname) ? "Found" : lastname)
+                        .lastname(dummyLlastname)
                         .firstname(Objects.isNull(firstname) ? "Jimmy" : firstname)
                         .build()
         );
@@ -82,7 +87,7 @@ public class DummyTraineeService implements TraineeService {
 
     @Override
     public TraineeDto add(TraineeDto traineeDto) {
-        traineeDto.setId(RandomGenerator.getDefault().nextInt());
+        traineeDto.setId(RANDOM_ID_GENERATOR.nextInt());
         return traineeDto;
     }
 

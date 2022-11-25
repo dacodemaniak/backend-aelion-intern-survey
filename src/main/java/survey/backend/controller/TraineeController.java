@@ -8,6 +8,7 @@ import survey.backend.dto.TraineeDto;
 import survey.backend.error.NoDataFoundError;
 import survey.backend.service.TraineeService;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
@@ -70,8 +71,9 @@ public class TraineeController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TraineeDto add(@RequestBody TraineeDto traineeDto){
-       return traineeService.add(traineeDto);
+    public TraineeDto add(@Valid @RequestBody TraineeDto traineeDto){
+       // TODO: traineeDto must be valid
+        return traineeService.add(traineeDto);
     }
 
     /**
@@ -81,7 +83,8 @@ public class TraineeController {
      * @return
      */
     @PutMapping
-    public TraineeDto update(@RequestBody TraineeDto traineeDto) {
+    public TraineeDto update(@Valid @RequestBody TraineeDto traineeDto) {
+        // TODO: traineeDto must be valid
         return traineeService.update(traineeDto)
                 .orElseThrow(() -> NoDataFoundError.withId("Trainee", traineeDto.getId()));
     }
