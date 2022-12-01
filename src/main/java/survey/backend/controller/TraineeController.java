@@ -6,14 +6,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import survey.backend.dto.TraineeDto;
 import survey.backend.entities.Trainee;
+import survey.backend.error.BadRequestError;
 import survey.backend.error.NoDataFoundError;
 import survey.backend.service.TraineeService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("api/trainee")
@@ -60,8 +61,25 @@ public class TraineeController {
             @RequestParam(name="ln", required = false) String lastname,
             @RequestParam(name="fn", required = false) String firstname
     ){
-        // TODO: return 400 BAD REQUEST if both params are null
-        return traineeService.search(lastname, firstname);
+        int size = 0;
+
+        if (lastname == null && firstname == null) {
+            throw new BadRequestError("search with no args not permitted"); // 400 Bad Request
+        }
+
+        Iterable<Trainee> iTrainees = traineeService.search(lastname, firstname); // Service results
+
+        // Get elements number
+        if (iTrainees instanceof Collection) {
+            size = ((Collection<Trainee>) iTrainees).size();
+        }
+
+
+        if (size == 0) {
+            throw NoDataFoundError.noResults("Trainee search", lastname + " " + firstname);
+        }
+
+        return iTrainees;
     }
 
     /**
