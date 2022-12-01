@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import survey.backend.dto.TraineeDto;
+import survey.backend.entities.Trainee;
 import survey.backend.error.NoDataFoundError;
 import survey.backend.service.TraineeService;
 
@@ -27,7 +28,7 @@ public class TraineeController {
      * @return list of trainees
      */
     @GetMapping
-    public Set<TraineeDto> getAll(){
+    public Iterable<Trainee> getAll(){
         return traineeService.findAll();
     }
 
@@ -38,10 +39,10 @@ public class TraineeController {
      * @return a trainee
      */
     @GetMapping("{id}")
-    public TraineeDto getById(@PathVariable("id") int id){
-        Optional<TraineeDto> optTraineeDto = traineeService.findById(id);
-        if (optTraineeDto.isPresent()){
-            return optTraineeDto.get();
+    public Trainee getById(@PathVariable("id") int id){
+        Optional<Trainee> optTrainee = traineeService.findById(id);
+        if (optTrainee.isPresent()){
+            return optTrainee.get();
         } else {
             throw NoDataFoundError.withId("Trainee", id);
         }
@@ -55,7 +56,7 @@ public class TraineeController {
      * @return trainees corresponding
      */
     @GetMapping("search")
-    public Set<TraineeDto> search(
+    public Iterable<Trainee> search(
             @RequestParam(name="ln", required = false) String lastname,
             @RequestParam(name="fn", required = false) String firstname
     ){
@@ -71,7 +72,7 @@ public class TraineeController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TraineeDto add(@Valid @RequestBody TraineeDto traineeDto){
+    public Trainee add(@Valid @RequestBody TraineeDto traineeDto){
        // TODO: traineeDto must be valid
         return traineeService.add(traineeDto);
     }
@@ -83,10 +84,10 @@ public class TraineeController {
      * @return
      */
     @PutMapping
-    public TraineeDto update(@Valid @RequestBody TraineeDto traineeDto) {
+    public Trainee update(@Valid @RequestBody TraineeDto traineeDto) {
         // TODO: traineeDto must be valid
         return traineeService.update(traineeDto)
-                .orElseThrow(() -> NoDataFoundError.withId("Trainee", traineeDto.getId()));
+                .orElseThrow(() -> NoDataFoundError.withId("Trainee", Math.toIntExact(traineeDto.getId())));
     }
 
     /**
@@ -96,8 +97,8 @@ public class TraineeController {
      */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") int id) {
-        if (!traineeService.delete(id)) {
+    public void remove(@PathVariable("id") int id) {
+        if (!traineeService.remove(id)) {
             throw NoDataFoundError.withId("Trainee", id);
         }
     }
