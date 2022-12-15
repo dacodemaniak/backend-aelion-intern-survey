@@ -15,7 +15,7 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt.token.validity")
+    @Value("${jwt.token.validity}")
     private Long jwtValidity;
 
     public String getUserLogin(final String token) {

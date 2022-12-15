@@ -34,9 +34,12 @@ public class ApiSecurityConfig {
 
     @Autowired
     JwtAuthenticationFilter jwtAuthenticationFilter;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
    @Autowired
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userAuthService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(userAuthService).passwordEncoder(this.passwordEncoder);
     }
 
     @Bean
@@ -79,10 +82,5 @@ public class ApiSecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

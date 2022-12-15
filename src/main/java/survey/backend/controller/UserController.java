@@ -17,9 +17,9 @@ public class UserController {
     }
 
     @PostMapping()
-    public User add(@RequestBody UserRequestDto userDto) {
+    public void add(@RequestBody UserRequestDto userDto) {
         // @todo Returns only a UserResponseDto
-        return userAuthService.add(userDto);
+        userAuthService.add(userDto);
     }
 
 }
