@@ -20,7 +20,7 @@ import survey.backend.service.UserAuthService;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@RestController
 @RequestMapping("api/user")
 public class UserController {
     @Autowired
@@ -37,7 +37,7 @@ public class UserController {
         throw new RuntimeException("Method not implemented yet");
     }
 
-    @PostMapping("/signin")
+    @PostMapping("signin")
     public ResponseEntity<UserResponseDto> generateJwtToken(@RequestBody UserRequestDto request) {
         Authentication authentication = null;
 
@@ -76,7 +76,7 @@ public class UserController {
     }
 
 
-    @PostMapping("/signup")
+    @PostMapping("signup")
     public ResponseEntity<SignupMessage> signup(@RequestBody UserRequestDto request) {
         this.userAuthService.add(request);
         SignupMessage message = new SignupMessage("User was successfully registred");

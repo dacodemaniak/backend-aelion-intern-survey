@@ -23,7 +23,7 @@ import survey.backend.service.UserAuthService;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApiSecurityConfig {
 
     @Autowired
@@ -44,7 +44,7 @@ public class ApiSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/api/user/signin", "/api/user/signup", "/api/user/info","/api/user/byusername");
+        return (web) -> web.ignoring().antMatchers("/api/user/signup");
     }
 
     @Bean
@@ -62,7 +62,7 @@ public class ApiSecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/signin", "/api/user/signup", "/api/user/info","/api/user/byusername")
+                .antMatchers("/api/user/signup")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
