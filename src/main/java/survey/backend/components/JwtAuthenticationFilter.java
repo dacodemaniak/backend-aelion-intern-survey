@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         // Is a bearer ?
-        if (header == null || !header.startsWith("bearer")) {
+        if (header == null || !header.startsWith("Bearer")) {
             try {
                 throw new JwtTokenMissingException();
             } catch (JwtTokenMissingException e) {
@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        String token = header.substring("bearer".length() + 1);
+        String token = header.substring("Bearer".length() + 1);
 
         String userName = jwtUtil.getUserLogin(token);
 

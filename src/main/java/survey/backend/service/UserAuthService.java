@@ -59,6 +59,7 @@ public class UserAuthService implements UserDetailsService {
         user.setRoles(userDto.getRoles().stream().map(r -> {
             UserRole ur = new UserRole();
             ur.setRole(r);
+            ur.setUser(user);
             return ur;
         }).collect(Collectors.toSet()));
 
