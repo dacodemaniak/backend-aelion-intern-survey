@@ -44,7 +44,7 @@ public class ApiSecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/api/user/signup");
+        return (web) -> web.ignoring().antMatchers("/api/user/**");
     }
 
     @Bean
@@ -62,7 +62,7 @@ public class ApiSecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-                .antMatchers("/api/user/signup")
+                .antMatchers("/api/user/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

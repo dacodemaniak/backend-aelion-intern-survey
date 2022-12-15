@@ -13,7 +13,7 @@ import survey.backend.components.JwtUtil;
 import survey.backend.dto.SignupMessage;
 import survey.backend.dto.UserRequestDto;
 import survey.backend.dto.UserResponseDto;
-import survey.backend.entities.User;
+import org.springframework.security.core.userdetails.User;
 import survey.backend.error.jwt.DisabledUserException;
 import survey.backend.error.jwt.InvalidCredentialsException;
 import survey.backend.service.UserAuthService;
@@ -60,8 +60,8 @@ public class UserController {
         User user = (User) authentication.getPrincipal();
 
         Set<String> roles = user
-                .getRoles()
-                .stream().map(r -> r.getRole())
+                .getAuthorities()
+                .stream().map(r -> r.getAuthority())
                 .collect(Collectors.toSet());
 
         // Make a token from "authentication" object

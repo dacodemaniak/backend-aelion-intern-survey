@@ -4,7 +4,7 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import survey.backend.entities.User;
+import org.springframework.security.core.userdetails.User;
 import survey.backend.error.jwt.JwtTokenMalformedException;
 import survey.backend.error.jwt.JwtTokenMissingException;
 
@@ -32,7 +32,7 @@ public class JwtUtil {
 
     public String generateToken(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
-        Claims claims = Jwts.claims().setSubject(user.getUserLogin());
+        Claims claims = Jwts.claims().setSubject(user.getUsername());
 
         final long nowMillis = System.currentTimeMillis();
         final long expMillis = nowMillis + jwtValidity;

@@ -12,6 +12,7 @@ import survey.backend.dto.UserRequestDto;
 import survey.backend.entities.User;
 import survey.backend.entities.UserRole;
 import survey.backend.repository.UserRepository;
+import survey.backend.repository.UserRoleRepository;
 
 import javax.transaction.Transactional;
 
@@ -23,6 +24,8 @@ public class UserAuthService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -44,7 +47,7 @@ public class UserAuthService implements UserDetailsService {
         // Finally returns a full Core User
         return new org.springframework.security.core.userdetails.User(login, user.getUserPassword(), grantedAuthorities);
     }
-
+    @Transactional
     public void add(UserRequestDto userDto) {
         if (this.userRepository.findByUserLogin((userDto.getUserLogin())).isPresent()) {
             // @todo Move to explicit exception (UserAlreadyExistsException)
@@ -56,13 +59,16 @@ public class UserAuthService implements UserDetailsService {
         user.setUserLogin(userDto.getUserLogin());
         user.setUserPassword(passwordEncoder.encode(userDto.getUserPassword()));
 
+        this.userRepository.save(user);
+
         user.setRoles(userDto.getRoles().stream().map(r -> {
             UserRole ur = new UserRole();
             ur.setRole(r);
             ur.setUser(user);
+            this.userRoleRepository.save(ur);
             return ur;
         }).collect(Collectors.toSet()));
 
-        this.userRepository.save(user);
+
     }
 }
