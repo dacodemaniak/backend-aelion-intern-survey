@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import survey.backend.dto.TraineeDto;
-import survey.backend.entities.Trainee;
+
 import survey.backend.error.BadRequestError;
 import survey.backend.error.NoDataFoundError;
 import survey.backend.service.TraineeService;
@@ -29,7 +29,7 @@ public class TraineeController {
      * @return list of trainees
      */
     @GetMapping
-    public Iterable<Trainee> getAll(){
+    public Iterable<TraineeDto> getAll(){
         return traineeService.findAll();
     }
 
@@ -40,8 +40,8 @@ public class TraineeController {
      * @return a trainee
      */
     @GetMapping("{id}")
-    public Trainee getById(@PathVariable("id") int id){
-        Optional<Trainee> optTrainee = traineeService.findById(id);
+    public TraineeDto getById(@PathVariable("id") long id){
+        Optional<TraineeDto> optTrainee = traineeService.findById(id);
         if (optTrainee.isPresent()){
             return optTrainee.get();
         } else {
@@ -57,7 +57,7 @@ public class TraineeController {
      * @return trainees corresponding
      */
     @GetMapping("search")
-    public Iterable<Trainee> search(
+    public Iterable<TraineeDto> search(
             @RequestParam(name="ln", required = false) String lastname,
             @RequestParam(name="fn", required = false) String firstname
     ){
@@ -67,11 +67,11 @@ public class TraineeController {
             throw new BadRequestError("search with no args not permitted"); // 400 Bad Request
         }
 
-        Iterable<Trainee> iTrainees = traineeService.search(lastname, firstname); // Service results
+        Iterable<TraineeDto> iTrainees = traineeService.search(lastname, firstname); // Service results
 
         // Get elements number
         if (iTrainees instanceof Collection) {
-            size = ((Collection<Trainee>) iTrainees).size();
+            size = ((Collection<TraineeDto>) iTrainees).size();
         }
 
 
@@ -90,8 +90,7 @@ public class TraineeController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Trainee add(@Valid @RequestBody TraineeDto traineeDto){
-       // TODO: traineeDto must be valid
+    public TraineeDto add(@Valid @RequestBody TraineeDto traineeDto){
         return traineeService.add(traineeDto);
     }
 
@@ -102,8 +101,7 @@ public class TraineeController {
      * @return
      */
     @PutMapping
-    public Trainee update(@Valid @RequestBody TraineeDto traineeDto) {
-        // TODO: traineeDto must be valid
+    public TraineeDto update(@Valid @RequestBody TraineeDto traineeDto) {
         return traineeService.update(traineeDto)
                 .orElseThrow(() -> NoDataFoundError.withId("Trainee", Math.toIntExact(traineeDto.getId())));
     }
@@ -115,7 +113,7 @@ public class TraineeController {
      */
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remove(@PathVariable("id") int id) {
+    public void remove(@PathVariable("id") long id) {
         if (!traineeService.remove(id)) {
             throw NoDataFoundError.withId("Trainee", id);
         }

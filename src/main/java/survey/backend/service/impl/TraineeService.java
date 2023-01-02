@@ -1,5 +1,6 @@
 package survey.backend.service.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import survey.backend.dto.TraineeDto;
@@ -16,18 +17,21 @@ public class TraineeService implements survey.backend.service.TraineeService {
     @Autowired
     private TraineeRepository traineeRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
+
     @Override
-    public Iterable<Trainee> findAll() {
+    public Iterable<TraineeDto> findAll() {
         return this.traineeRepository.findAll();
     }
 
     @Override
-    public Optional<Trainee> findById(int id) {
-        return this.traineeRepository.findById((long) id);
+    public Optional<TraineeDto> findById(long id) {
+        return this.traineeRepository.findById(id);
     }
 
     @Override
-    public Iterable<Trainee> search(String lastname, String firstname) {
+    public Iterable<TraineeDto> search(String lastname, String firstname) {
         if (lastname != null && firstname != null) {
             return this.traineeRepository.listByLastNameAndFirstName(lastname, firstname);
         }
@@ -40,12 +44,12 @@ public class TraineeService implements survey.backend.service.TraineeService {
     }
 
     @Override
-    public Trainee add(TraineeDto traineeDto) {
+    public TraineeDto add(TraineeDto traineeDto) {
         return this.traineeRepository.save(traineeDto.toTrainee());
     }
 
     @Override
-    public Optional<Trainee> update(TraineeDto traineeDto) {
+    public Optional<TraineeDto> update(TraineeDto traineeDto) {
         Trainee trainee = traineeDto.toTrainee();
         Optional<Trainee> oTrainee = this.traineeRepository.findById(trainee.getId());
         if (oTrainee.isPresent()) {
@@ -56,9 +60,9 @@ public class TraineeService implements survey.backend.service.TraineeService {
     }
 
     @Override
-    public boolean remove(int id) {
+    public boolean remove(long id) {
        // 1st Get the Trainee by its id
-        Optional<Trainee> oTrainee = this.traineeRepository.findById((long) id);
+        Optional<Trainee> oTrainee = this.traineeRepository.findById(id);
         if (oTrainee.isPresent()) {
             this.traineeRepository.delete(oTrainee.get());
             return true;

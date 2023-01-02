@@ -3,6 +3,7 @@ package survey.backend.dto;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -15,31 +16,31 @@ class TraineeDtoTest {
         // then
         assertAll(
                 () -> assertNull(traineeDto.getId(), "id"),
-                () -> assertNull(traineeDto.getLastname(), "lastname"),
-                () -> assertNull(traineeDto.getFirstname(), "firstname"),
+                () -> assertNull(traineeDto.getLastName(), "lastname"),
+                () -> assertNull(traineeDto.getFirstName(), "firstname"),
                 () -> assertNull(traineeDto.getEmail(), "email"),
                 () -> assertNull(traineeDto.getPhoneNumber(), "phone number"),
-                () -> assertNull(traineeDto.getBirthdate(), "birthdate"));
+                () -> assertNull(traineeDto.getBirthDate(), "birthdate"));
     }
     @Test
     void testAllArgsConstructor(){
         // given
-        int id = 123;
+        long id = 123;
         String lastname = "Doe";
         String firstname = "John";
         String email = "john.doe@example.org";
         String phoneNumber = "+33600000001";
-        var birthdate = LocalDate.of(1952, 2, 29);
+        var birthdate = new Date(1952, 2, 29);
         // when
         var traineeDto = new TraineeDto(id,lastname,firstname,email,phoneNumber,birthdate);
         // then
         assertAll(
                 () -> assertEquals(id, traineeDto.getId(), "id"),
-                () -> assertEquals(lastname, traineeDto.getLastname(), "lastname"),
-                () -> assertEquals(firstname, traineeDto.getFirstname(), "firstname"),
+                () -> assertEquals(lastname, traineeDto.getLastName(), "lastname"),
+                () -> assertEquals(firstname, traineeDto.getFirstName(), "firstname"),
                 () -> assertEquals(email, traineeDto.getEmail(), "email"),
                 () -> assertEquals(phoneNumber, traineeDto.getPhoneNumber(), "phone number"),
-                () -> assertEquals(birthdate, traineeDto.getBirthdate(), "birthdate")
+                () -> assertEquals(birthdate, traineeDto.getBirthDate(), "birthdate")
         );
     }
 
@@ -49,23 +50,23 @@ class TraineeDtoTest {
     @Test
     void testBuilderPartial() {
         // given
-        int id = 123;
+        long id = 123L;
         String lastname = "Doe";
         String firstname = "John";
         // when
         var traineeDto = TraineeDto.builder()
                 .id(id)
-                .lastname(lastname)
-                .firstname(firstname)
+                .lastName(lastname)
+                .firstName(firstname)
                 .build();
         // then
         assertAll(
                 () -> assertEquals(id, traineeDto.getId(), "id"),
-                () -> assertEquals(lastname, traineeDto.getLastname(), "lastname"),
-                () -> assertEquals(firstname, traineeDto.getFirstname(), "firstname"),
+                () -> assertEquals(lastname, traineeDto.getLastName(), "lastname"),
+                () -> assertEquals(firstname, traineeDto.getFirstName(), "firstname"),
                 () -> assertNull(traineeDto.getEmail(), "email"),
                 () -> assertNull(traineeDto.getPhoneNumber(), "phone number"),
-                () -> assertNull(traineeDto.getBirthdate(), "birthdate")
+                () -> assertNull(traineeDto.getBirthDate(), "birthdate")
         );
     }
 }

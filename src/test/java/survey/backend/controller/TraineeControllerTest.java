@@ -39,11 +39,11 @@ class TraineeControllerTest {
     @Test
     void testGetByIdOk() throws Exception {
         // 1. prepare
-        int id = 123;
+        long id = 123L;
         var traineeDto = TraineeDto.builder()
                 .id(id)
-                .lastname("Doe")
-                .firstname("John")
+                .lastName("Doe")
+                .firstName("John")
                 .build();
 
         given(traineeService.findById(id))
@@ -68,7 +68,7 @@ class TraineeControllerTest {
 
     @Test
     void testGetByIdKoNotFound() throws Exception {
-        int id = 0;
+        long id = 0L;
 
         given(traineeService.findById(id))
                 .willReturn(Optional.empty());
