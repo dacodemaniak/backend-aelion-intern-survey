@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import survey.backend.dto.TraineeDto;
 import survey.backend.entities.Trainee;
 import survey.backend.repository.TraineeRepository;
+import survey.backend.utils.StreamUtils;
 
 import java.util.Optional;
 
@@ -22,41 +23,59 @@ public class TraineeService implements survey.backend.service.TraineeService {
 
     @Override
     public Iterable<TraineeDto> findAll() {
-        return this.traineeRepository.findAll();
+
+        return StreamUtils.toStream(this.traineeRepository.findAll())
+                .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
+                .toList();
     }
 
     @Override
     public Optional<TraineeDto> findById(long id) {
-        return this.traineeRepository.findById(id);
+        return this.traineeRepository.findById(id)
+                .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class));
     }
 
     @Override
     public Iterable<TraineeDto> search(String lastname, String firstname) {
         if (lastname != null && firstname != null) {
-            return this.traineeRepository.listByLastNameAndFirstName(lastname, firstname);
+            return this.traineeRepository.listByLastNameAndFirstName(lastname, firstname)
+                    .stream()
+                    .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
+                    .toList();
         }
 
         if (lastname != null) {
-            return this.traineeRepository.findByLastName(lastname);
+            return this.traineeRepository.findByLastName(lastname)
+                    .stream()
+                    .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
+                    .toList();
         }
 
-        return this.traineeRepository.findByFirstName(firstname);
+        return this.traineeRepository.findByFirstName(firstname)
+                .stream()
+                .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
+                .toList();
     }
 
     @Override
     public TraineeDto add(TraineeDto traineeDto) {
-        return this.traineeRepository.save(traineeDto.toTrainee());
+        Trainee traineeEntity = modelMapper.map(traineeDto, Trainee.class);
+        this.traineeRepository.save(traineeEntity); // SQL: insert + id
+        TraineeDto traineeDtoResponse = modelMapper.map(traineeEntity, TraineeDto.class);
+        return traineeDtoResponse;
     }
 
     @Override
     public Optional<TraineeDto> update(TraineeDto traineeDto) {
-        Trainee trainee = traineeDto.toTrainee();
-        Optional<Trainee> oTrainee = this.traineeRepository.findById(trainee.getId());
-        if (oTrainee.isPresent()) {
-            this.traineeRepository.save(trainee);
-            return Optional.of(trainee);
-        }
-        return Optional.empty();
+        return this.traineeRepository.findById(traineeDto.getId())
+                .map(traineeEntity -> {
+                    // update entity object read from db with dto fields
+                    modelMapper.map(traineeDto, traineeEntity);
+                    // synchronize with database
+                    traineeRepository.save(traineeEntity); // SQL: update
+                    // transform entity updated in dto
+                    return modelMapper.map(traineeEntity, TraineeDto.class);
+                });
     }
 
     @Override

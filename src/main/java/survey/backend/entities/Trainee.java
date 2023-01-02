@@ -29,6 +29,6 @@ public class Trainee {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name="phone_number", nullable = false)
+    @Column(name="phone_number", nullable = true)
     private String phoneNumber;
 }

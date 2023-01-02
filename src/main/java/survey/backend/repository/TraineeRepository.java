@@ -5,20 +5,27 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import survey.backend.entities.Trainee;
 
+import java.util.List;
+
 public interface TraineeRepository extends CrudRepository<Trainee, Long> {
+
+    // Native SQL if no other possibility
     @Query(
             value = "SELECT id, last_name, first_name, birth_date, phone_number, email FROM trainee WHERE last_name = :lastName AND first_name = :firstName",
             nativeQuery = true
     )
-    public Iterable<Trainee> listByLastNameAndFirstName(@Param(value="lastName") String lastName, @Param(value="firstName") String firstName);
+    List<Trainee> listByLastNameAndFirstName(@Param(value="lastName") String lastName, @Param(value="firstName") String firstName);
 
+    // JPQL/HQL
     @Query(
             value="SELECT t FROM Trainee t WHERE t.lastName = :lastName AND t.firstName = :firstName"
     )
-    public Iterable<Trainee> byLastNameAndFirstName(@Param(value="lastName") String lastName, @Param(value="firstName") String firstName);
+    List<Trainee> byLastNameAndFirstName(@Param(value="lastName") String lastName, @Param(value="firstName") String firstName);
 
-    public Iterable<Trainee> findByLastName(String lastName);
+    // JPQL auto generated according to Spring Data Jpa vocabulary
+    // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation
+    List<Trainee> findByLastName(String lastName);
 
-    public Iterable<Trainee> findByFirstName(String firstName);
+    List<Trainee> findByFirstName(String firstName);
 
 }

@@ -2,10 +2,8 @@ package survey.backend.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import survey.backend.entities.Trainee;
 
 import javax.validation.constraints.*;
-import java.time.LocalDate;
 import java.util.Date;
 
 @Builder
@@ -33,16 +31,5 @@ public class TraineeDto {
     @Past
     private Date birthDate;
 
-    public Trainee toTrainee() {
-        Trainee trainee = new Trainee();
 
-        trainee.setId(this.id);
-        trainee.setLastName(this.lastName);
-        trainee.setFirstName(this.firstName);
-        trainee.setPhoneNumber(this.phoneNumber);
-        trainee.setEmail(this.email);
-        trainee.setBirthDate(this.birthDate);
-
-        return trainee;
-    }
 }
