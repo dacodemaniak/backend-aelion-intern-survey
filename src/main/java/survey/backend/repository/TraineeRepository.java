@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import survey.backend.entities.Trainee;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TraineeRepository extends CrudRepository<Trainee, Long> {
 
@@ -27,5 +28,7 @@ public interface TraineeRepository extends CrudRepository<Trainee, Long> {
     List<Trainee> findByLastName(String lastName);
 
     List<Trainee> findByFirstName(String firstName);
+
+    Optional<Trainee> findByEmail(String email);
 
 }
