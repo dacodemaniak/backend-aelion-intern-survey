@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import survey.backend.entities.Poe;
 import survey.backend.tools.PoeType;
@@ -22,6 +23,10 @@ class PoeRepositoryTest {
 
     @Autowired
     PoeRepository poeRepository;
+
+    // Hibernate component to write data in DB before each test
+    @Autowired
+    TestEntityManager entityManager;
 
     @SneakyThrows
     @Test
@@ -62,13 +67,24 @@ class PoeRepositoryTest {
                         .type(PoeType.POEI)
                         .build()
         );
-        System.out.println(poes);
+        // save data in DB
+        poes.forEach(poe -> entityManager.persist(poe));
+        entityManager.flush(); // synchronize hibernate cache with DB
+        // empty hibernate cache
+        entityManager.clear();
+
         // when
-        var res = poeRepository.findByEndingInRange(date1, date2);
+        var poesFound = poeRepository.findByEndingInRange(date1, date2);
 
         // then
-        // assertions here
-        System.out.println(res);
+        assertEquals(3, poesFound.size(), "poe found number");
+        assertAll(poesFound.stream()
+                .map(poe -> () -> assertTrue(
+                        (date1.compareTo(poe.getEndDate()) <= 0)
+                        && (poe.getEndDate().compareTo(date2) <= 0),
+                        "poe end date in range"
+                ))
+        );
     }
 
 }
