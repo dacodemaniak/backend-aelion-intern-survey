@@ -1,17 +1,18 @@
 package survey.backend.entities;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import survey.backend.tools.PoeType;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
-
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter @Setter
+@ToString(exclude = "trainees")
 @Entity
-@Getter
-@Setter
 public class Poe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,8 +32,9 @@ public class Poe {
     @Enumerated(EnumType.STRING)
     private PoeType type;
 
+    @Builder.Default
     @OneToMany
     @JoinColumn(name="poe_id")
-    private Set<Trainee> trainees;
+    private Set<Trainee> trainees = new HashSet<>();
 
 }

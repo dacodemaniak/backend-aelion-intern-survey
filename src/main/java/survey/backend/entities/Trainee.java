@@ -6,10 +6,9 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.Date;
 
+@Getter @Setter
 @Entity
 @Table(name="trainee")
-@Getter
-@Setter
 public class Trainee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,13 +21,13 @@ public class Trainee {
     @Column(name="first_name", nullable = false)
     private String firstName;
 
-    @Column(name="birth_date", nullable = true)
+    @Column(name="birth_date")
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(name="phone_number", nullable = true)
+    @Column(name="phone_number")
     private String phoneNumber;
 }

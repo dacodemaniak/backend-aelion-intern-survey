@@ -29,7 +29,7 @@ public class TraineeController {
      * @return list of trainees
      */
     @GetMapping
-    public Iterable<TraineeDto> getAll(){
+    public Collection<TraineeDto> getAll(){
         return traineeService.findAll();
     }
 
@@ -57,29 +57,22 @@ public class TraineeController {
      * @return trainees corresponding
      */
     @GetMapping("search")
-    public Iterable<TraineeDto> search(
+    public Collection<TraineeDto> search(
             @RequestParam(name="ln", required = false) String lastname,
             @RequestParam(name="fn", required = false) String firstname
     ){
-        int size = 0;
-
         if (lastname == null && firstname == null) {
             throw new BadRequestError("search with no args not permitted"); // 400 Bad Request
         }
 
-        Iterable<TraineeDto> iTrainees = traineeService.search(lastname, firstname); // Service results
+        var traineesFound = traineeService.search(lastname, firstname); // Service results
 
-        // Get elements number
-        if (iTrainees instanceof Collection) {
-            size = ((Collection<TraineeDto>) iTrainees).size();
+        if (traineesFound.size() == 0) {
+            throw NoDataFoundError.noResults("Trainee search",
+                    String.format("lastname=%s, firstname=%s", lastname, firstname));
         }
 
-
-        if (size == 0) {
-            throw NoDataFoundError.noResults("Trainee search", lastname + " " + firstname);
-        }
-
-        return iTrainees;
+        return traineesFound;
     }
 
     /**

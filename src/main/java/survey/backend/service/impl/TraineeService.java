@@ -8,6 +8,7 @@ import survey.backend.entities.Trainee;
 import survey.backend.repository.TraineeRepository;
 import survey.backend.utils.StreamUtils;
 
+import java.util.Collection;
 import java.util.Optional;
 
 
@@ -22,7 +23,7 @@ public class TraineeService implements survey.backend.service.TraineeService {
     private ModelMapper modelMapper;
 
     @Override
-    public Iterable<TraineeDto> findAll() {
+    public Collection<TraineeDto> findAll() {
 
         return StreamUtils.toStream(this.traineeRepository.findAll())
                 .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
@@ -36,7 +37,7 @@ public class TraineeService implements survey.backend.service.TraineeService {
     }
 
     @Override
-    public Iterable<TraineeDto> search(String lastname, String firstname) {
+    public Collection<TraineeDto> search(String lastname, String firstname) {
         if (lastname != null && firstname != null) {
             return this.traineeRepository.listByLastNameAndFirstName(lastname, firstname)
                     .stream()
@@ -88,4 +89,5 @@ public class TraineeService implements survey.backend.service.TraineeService {
         }
         return false;
     }
+
 }
