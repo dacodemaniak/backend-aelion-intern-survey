@@ -9,6 +9,7 @@ import survey.backend.repository.PoeRepository;
 import survey.backend.entities.Poe;
 import survey.backend.repository.TraineeRepository;
 import survey.backend.service.PoeService;
+import survey.backend.utils.StreamUtils;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -26,14 +27,15 @@ public class PoeServiceImplJpa implements PoeService {
     ModelMapper modelMapper;
 
     public Collection<PoeDto> findAll() {
-
-        // return this.repository.findAll();
-        return null;
+        return StreamUtils.toStream(poeRepository.findAll())
+                .map(poeEntity -> modelMapper.map(poeEntity, PoeDto.class))
+                .toList();
     }
 
     @Override
     public Optional<PoeFullDto> findById(long id) {
-        return Optional.empty();
+        return poeRepository.findById(id)
+                .map(poeEntity -> modelMapper.map(poeEntity, PoeFullDto.class));
     }
 
     @Override
