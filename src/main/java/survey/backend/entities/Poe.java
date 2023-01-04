@@ -23,17 +23,19 @@ public class Poe {
     private String title;
 
     @Column(name="begin_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date beginDate;
 
     @Column(name="end_date", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    @Column(nullable = false)
+    @Column(name = "poe_type", nullable = false)
     @Enumerated(EnumType.STRING)
     private PoeType type;
 
     @Builder.Default
-    @OneToMany
+    @OneToMany // fetch lazy by default
     @JoinColumn(name="poe_id")
     private Set<Trainee> trainees = new HashSet<>();
 
