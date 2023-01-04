@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import survey.backend.dto.TraineeDto;
 import survey.backend.entities.Trainee;
 import survey.backend.repository.TraineeRepository;
+import survey.backend.service.TraineeService;
 import survey.backend.utils.StreamUtils;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 
 @Service
-public class TraineeService implements survey.backend.service.TraineeService {
+public class TraineeServiceImplJpa implements TraineeService {
 
     @Autowired
     private TraineeRepository traineeRepository;
