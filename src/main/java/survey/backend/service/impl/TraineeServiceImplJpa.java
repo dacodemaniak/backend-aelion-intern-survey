@@ -40,20 +40,20 @@ public class TraineeServiceImplJpa implements TraineeService {
     @Override
     public Collection<TraineeDto> search(String lastname, String firstname) {
         if (lastname != null && firstname != null) {
-            return this.traineeRepository.listByLastNameAndFirstName(lastname, firstname)
+            return this.traineeRepository.byLastNameAndFirstName(lastname, firstname)
                     .stream()
                     .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
                     .toList();
         }
 
         if (lastname != null) {
-            return this.traineeRepository.findByLastName(lastname)
+            return this.traineeRepository.findByLastNameIgnoreCase(lastname)
                     .stream()
                     .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
                     .toList();
         }
 
-        return this.traineeRepository.findByFirstName(firstname)
+        return this.traineeRepository.findByFirstNameIgnoreCase(firstname)
                 .stream()
                 .map(traineeEntity -> modelMapper.map(traineeEntity, TraineeDto.class))
                 .toList();
