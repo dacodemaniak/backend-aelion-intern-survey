@@ -4,26 +4,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import survey.backend.dto.PoeDto;
 import survey.backend.dto.PoeFullDto;
-import survey.backend.entities.Poe;
 import survey.backend.error.NoDataFoundError;
 import survey.backend.service.PoeService;
-import survey.backend.service.impl.PoeServiceImplJpa;
 
 import java.util.Collection;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/poe")
 public class PoeController {
     @Autowired
-    private PoeService service;
+    private PoeService poeService;
     @GetMapping
     public Collection<PoeDto> findAll() {
-        return this.service.findAll();
+        return this.poeService.findAll();
     }
 
     @GetMapping("/{id}")
     public PoeFullDto findById(@PathVariable("id") long id){
-        return service.findById(id)
+        return poeService.findById(id)
                 .orElseThrow(() -> {throw NoDataFoundError.withId("Poe", id);});
     }
 
@@ -32,9 +31,21 @@ public class PoeController {
             @PathVariable("poeId") long poeId,
             @PathVariable("traineeId") long traineeId)
     {
-        return service.addTrainee(poeId, traineeId)
+        return poeService.addTrainee(poeId, traineeId)
                 .orElseThrow(() -> {
                     throw NoDataFoundError.withIds("Poe or Trainee", poeId, traineeId);
+                });
+    }
+
+    @PatchMapping("/{poeId}/addTrainees")
+    public PoeFullDto addTrainees(
+            @PathVariable("poeId") long poeId,
+            @RequestBody List<Long> traineeIds
+    ){
+        return poeService.addTrainees(poeId, traineeIds)
+                .orElseThrow(() -> {
+                    throw NoDataFoundError.withIds("Poe or trainees",
+                            poeId);
                 });
     }
 }

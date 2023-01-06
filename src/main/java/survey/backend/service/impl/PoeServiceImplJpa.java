@@ -48,6 +48,7 @@ public class PoeServiceImplJpa implements PoeService {
         return Optional.empty();
     }
 
+
     @Override
     public Optional<PoeFullDto> addTrainee(long poeId, long traineeId) {
         return poeRepository.findById(poeId)
