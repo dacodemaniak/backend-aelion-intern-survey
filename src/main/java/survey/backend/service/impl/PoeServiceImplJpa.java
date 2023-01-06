@@ -41,11 +41,13 @@ public class PoeServiceImplJpa implements PoeService {
 
     @Override
     public PoeDto add(PoeDto poeDto) {
+        //  TODO
         return null;
     }
 
     @Override
     public Optional<PoeFullDto> update(PoeDto poeDto) {
+        // TODO
         return Optional.empty();
     }
 
@@ -85,16 +87,19 @@ public class PoeServiceImplJpa implements PoeService {
 
     @Override
     public Optional<PoeFullDto> removeTrainee(long poeId, long traineeId) {
+        // TODO
         return Optional.empty();
     }
 
     @Override
     public Optional<PoeFullDto> clearTrainees(long poeId) {
+        // TODO
         return Optional.empty();
     }
 
     @Override
     public boolean remove(long poeId) {
+        // TODO
         return false;
     }
 

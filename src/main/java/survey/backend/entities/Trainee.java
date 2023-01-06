@@ -2,6 +2,7 @@ package survey.backend.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import survey.backend.entities.converter.BlankStringConverter;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class Trainee {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Convert(converter = BlankStringConverter.class)
     @Column(name="phone_number")
     private String phoneNumber;
 }

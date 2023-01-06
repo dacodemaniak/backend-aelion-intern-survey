@@ -84,7 +84,7 @@ public class TraineeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TraineeDto add(@Valid @RequestBody TraineeDto traineeDto){
-        return traineeService.add(traineeDto);
+        return  traineeService.add(traineeDto);
     }
 
     /**
