@@ -42,8 +42,9 @@ public class PoeServiceImplJpa implements PoeService {
 
     @Override
     public PoeDto add(PoeDto poeDto) {
-        //  TODO
-        return null;
+        Poe poeEntity = modelMapper.map(poeDto, Poe.class);
+        poeRepository.save(poeEntity);
+        return modelMapper.map(poeEntity, PoeDto.class);
     }
 
     @Override
