@@ -98,9 +98,13 @@ public class PoeServiceImplJpa implements PoeService {
     }
 
     @Override
-    public boolean remove(long poeId) {
-        // TODO
-        return false;
+    public boolean remove(long poeId){
+        return poeRepository.findById(poeId)
+                .map(poeEntity -> {
+                    poeRepository.delete(poeEntity);
+                    return true;
+                })
+                .orElse(false);
     }
 
 }
