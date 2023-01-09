@@ -49,8 +49,12 @@ public class PoeServiceImplJpa implements PoeService {
 
     @Override
     public Optional<PoeFullDto> update(PoeDto poeDto) {
-        // TODO
-        return Optional.empty();
+        return poeRepository.findById(poeDto.getId())
+                .map(poeEntity -> {
+                    modelMapper.map(poeDto, poeEntity);
+                    poeRepository.save(poeEntity);
+                    return modelMapper.map(poeEntity, PoeFullDto.class);
+                });
     }
 
 
