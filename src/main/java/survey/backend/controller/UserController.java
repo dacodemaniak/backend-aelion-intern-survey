@@ -38,41 +38,38 @@ public class UserController {
     }
 
     @PostMapping("signin")
-    public ResponseEntity<UserResponseDto> generateJwtToken(@RequestBody UserRequestDto request) {
-        Authentication authentication = null;
-
+    public UserResponseDto generateJwtToken(@RequestBody UserRequestDto request) {
         try {
-            authentication = this.authenticationManager
+            Authentication  authentication = this.authenticationManager
                     .authenticate(
                             new UsernamePasswordAuthenticationToken(
                                     request.getUserLogin(),
                                     request.getUserPassword()
                             )
                     );
+            // Got a Spring Security User
+            User user = (User) authentication.getPrincipal();
+
+            Set<String> roles = user
+                    .getAuthorities()
+                    .stream().map(r -> r.getAuthority())
+                    .collect(Collectors.toSet());
+
+            // Make a token from "authentication" object
+            String token = jwtUtil.generateToken(authentication);
+
+            // Create a Response DTO to send to client
+            UserResponseDto response = new UserResponseDto();
+            response.setJwtToken(token);
+            response.setRoles(roles.stream().collect(Collectors.toList()));
+
+            return response;
 
         } catch (DisabledException e) {
             throw new DisabledUserException();
         } catch (BadCredentialsException e) {
             throw new InvalidCredentialsException();
         }
-
-        // Got a Spring Security User
-        User user = (User) authentication.getPrincipal();
-
-        Set<String> roles = user
-                .getAuthorities()
-                .stream().map(r -> r.getAuthority())
-                .collect(Collectors.toSet());
-
-        // Make a token from "authentication" object
-        String token = jwtUtil.generateToken(authentication);
-
-        // Create a Response DTO to send to client
-        UserResponseDto response = new UserResponseDto();
-        response.setJwtToken(token);
-        response.setRoles(roles.stream().collect(Collectors.toList()));
-
-        return new ResponseEntity<UserResponseDto>(response, HttpStatus.OK);
     }
 
 

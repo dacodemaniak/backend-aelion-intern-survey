@@ -13,11 +13,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import survey.backend.error.BadRequestError;
 import survey.backend.error.ErrorMessage;
 import survey.backend.error.NoDataFoundError;
+import survey.backend.error.jwt.DisabledUserException;
+import survey.backend.error.jwt.InvalidCredentialsException;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class ErrorHandler extends ResponseEntityExceptionHandler {
 
+    /**
+     * Override default handling of validation errors
+     * @param ex
+     * @param headers
+     * @param status
+     * @param request
+     * @return
+     */
     @Override
     public ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex,
@@ -25,29 +35,63 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request){
         return ResponseEntity.status(status)
-                .body("Data not valid");
+                .body("Data not valid"); // Customize here to have the details (not valid fields, why)
     }
 
+    // custom exception handlers
+
+    /**
+     * handle custom no data found error
+     * @param exception no data found exception
+     * @param request
+     * @return HTTP response entity
+     */
     @ExceptionHandler(NoDataFoundError.class)
     public ResponseEntity<ErrorMessage> handleNoDataFoundError(
-        Exception ex, WebRequest request
+        Exception exception, WebRequest request
     ){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(ErrorMessage.builder()
-                        .status(404)
-                        .error(ex.getMessage())
-                        .build()
-                );
+        return responseEntity(HttpStatus.NOT_FOUND, exception);
     }
 
+    /**
+     * handle custom bad request error
+     * @param exception bad request exception
+     * @param request
+     * @return HTTP response entity
+     */
     @ExceptionHandler(BadRequestError.class)
     public ResponseEntity<ErrorMessage> handleBadRequest(
             Exception exception, WebRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return responseEntity(HttpStatus.BAD_REQUEST, exception);
+    }
+
+    /**
+     * handle all authentication errors
+     * @param exception authentication exception
+     * @param request
+     * @return HTTP response entity
+     */
+    @ExceptionHandler({InvalidCredentialsException.class, DisabledUserException.class})
+    public ResponseEntity<ErrorMessage> handleUserAuthenticationException(
+            Exception exception, WebRequest request
+    ) {
+        return responseEntity(HttpStatus.UNAUTHORIZED, exception);
+    }
+
+    /**
+     * Build an HTTP response with:
+     * - an HTTP status
+     * - the error message from the source exception
+     * @param httpStatus HTTP status
+     * @param exception exception source
+     * @return response built
+     */
+    private static ResponseEntity<ErrorMessage> responseEntity(HttpStatus httpStatus, Exception exception) {
+        return ResponseEntity.status(httpStatus)
                 .body(
                         ErrorMessage.builder()
-                                .status(400)
+                                .status(httpStatus.value())
                                 .error(exception.getMessage())
                                 .build()
                 );
