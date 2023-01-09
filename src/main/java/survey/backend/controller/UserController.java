@@ -74,10 +74,10 @@ public class UserController {
 
 
     @PostMapping("signup")
-    public ResponseEntity<SignupMessage> signup(@RequestBody UserRequestDto request) {
+    public SignupMessage signup(@RequestBody UserRequestDto request) {
         this.userAuthService.add(request);
         SignupMessage message = new SignupMessage("User was successfully registred");
-        return new ResponseEntity<SignupMessage>(message, HttpStatus.OK);
+        return message;
     }
 
 }

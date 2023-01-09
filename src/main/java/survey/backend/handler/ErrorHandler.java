@@ -79,6 +79,11 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
         return responseEntity(HttpStatus.UNAUTHORIZED, exception);
     }
 
+    // TODO: handle DataIntegrityViolationException
+    // Example: Unique constraint when adding, delete entity referenced by another one, ...
+
+    // private response builder(s)
+
     /**
      * Build an HTTP response with:
      * - an HTTP status
