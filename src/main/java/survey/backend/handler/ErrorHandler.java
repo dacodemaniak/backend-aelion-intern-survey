@@ -2,6 +2,7 @@ package survey.backend.handler;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +82,12 @@ public class ErrorHandler extends ResponseEntityExceptionHandler {
 
     // TODO: handle DataIntegrityViolationException
     // Example: Unique constraint when adding, delete entity referenced by another one, ...
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorMessage> handleDataIntegrityViolationException(
+            Exception exception, WebRequest request
+    ) {
+        return responseEntity(HttpStatus.BAD_REQUEST, exception);
+    }
 
     // private response builder(s)
 
