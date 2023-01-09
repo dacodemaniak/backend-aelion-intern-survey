@@ -8,6 +8,7 @@ import survey.backend.dto.PoeFullDto;
 import survey.backend.error.NoDataFoundError;
 import survey.backend.service.PoeService;
 
+import javax.validation.Valid;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,11 @@ public class PoeController {
     public PoeFullDto findById(@PathVariable("id") long id){
         return poeService.findById(id)
                 .orElseThrow(() -> NoDataFoundError.withId("poe", id));
+    }
+
+    @PostMapping
+    public PoeDto add(@Valid @RequestBody PoeDto poeDto){
+        return poeService.add(poeDto);
     }
 
     @PatchMapping("/{poeId}/addTrainee/{traineeId}")
