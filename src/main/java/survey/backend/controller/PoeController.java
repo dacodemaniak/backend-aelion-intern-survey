@@ -23,7 +23,7 @@ public class PoeController {
     @GetMapping("/{id}")
     public PoeFullDto findById(@PathVariable("id") long id){
         return poeService.findById(id)
-                .orElseThrow(() -> {throw NoDataFoundError.withId("Poe", id);});
+                .orElseThrow(() -> NoDataFoundError.withId("Poe", id));
     }
 
     @PatchMapping("/{poeId}/addTrainee/{traineeId}")
@@ -32,9 +32,7 @@ public class PoeController {
             @PathVariable("traineeId") long traineeId)
     {
         return poeService.addTrainee(poeId, traineeId)
-                .orElseThrow(() -> {
-                    throw NoDataFoundError.withIds("Poe or Trainee", poeId, traineeId);
-                });
+                .orElseThrow(() -> NoDataFoundError.withIds("Poe or Trainee", poeId, traineeId));
     }
 
     @PatchMapping("/{poeId}/addTrainees")
@@ -43,9 +41,6 @@ public class PoeController {
             @RequestBody List<Long> traineeIds
     ){
         return poeService.addTrainees(poeId, traineeIds)
-                .orElseThrow(() -> {
-                    throw NoDataFoundError.withIds("Poe or trainees",
-                            poeId);
-                });
+                .orElseThrow(() -> NoDataFoundError.withIds("Poe or trainees",poeId));
     }
 }

@@ -47,6 +47,7 @@ public class TraineeController {
         } else {
             throw NoDataFoundError.withId("Trainee", id);
         }
+        // NB: can be refactored with Optional.orElseThrow
     }
 
     /**
@@ -96,7 +97,7 @@ public class TraineeController {
     @PutMapping
     public TraineeDto update(@Valid @RequestBody TraineeDto traineeDto) {
         return traineeService.update(traineeDto)
-                .orElseThrow(() -> NoDataFoundError.withId("Trainee", Math.toIntExact(traineeDto.getId())));
+                .orElseThrow(() -> NoDataFoundError.withId("Trainee", traineeDto.getId()));
     }
 
     /**
