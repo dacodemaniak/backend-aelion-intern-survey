@@ -2,7 +2,6 @@ package survey.backend.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import survey.backend.dto.TraineeDto;
@@ -86,11 +85,7 @@ public class TraineeController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TraineeDto add(@Valid @RequestBody TraineeDto traineeDto){
-        try {
-            return traineeService.add(traineeDto);
-        } catch (DataIntegrityViolationException ex) {
-            throw BadRequestError.withNoArgs("trainee");
-        }
+        return  traineeService.add(traineeDto);
     }
 
     /**
