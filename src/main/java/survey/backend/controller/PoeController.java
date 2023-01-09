@@ -53,6 +53,8 @@ public class PoeController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") long id) {
-        poeService.remove(id);
+        if (!poeService.remove(id)){
+            throw NoDataFoundError.withId("poe", id);
+        }
     }
 }

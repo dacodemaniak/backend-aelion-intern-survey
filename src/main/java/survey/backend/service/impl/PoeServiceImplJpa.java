@@ -12,6 +12,7 @@ import survey.backend.repository.TraineeRepository;
 import survey.backend.service.PoeService;
 import survey.backend.utils.StreamUtils;
 
+import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
