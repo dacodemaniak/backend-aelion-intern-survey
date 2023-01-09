@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import survey.backend.dto.UserRequestDto;
 import survey.backend.entities.User;
 import survey.backend.entities.UserRole;
+import survey.backend.error.jwt.InvalidCredentialsException;
 import survey.backend.repository.UserRepository;
 import survey.backend.repository.UserRoleRepository;
 
@@ -34,7 +35,9 @@ public class UserAuthService implements UserDetailsService {
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
 
         // Get User from it's login
-        User user = userRepository.findByUserLogin(login).get();
+        User user = userRepository.findByUserLogin(login).orElseThrow(
+                () -> new InvalidCredentialsException()
+        );
 
         // List roles for Identified User
         List<UserRole> roles = user.getRoles().stream().toList();
