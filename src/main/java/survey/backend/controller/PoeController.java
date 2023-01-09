@@ -9,6 +9,7 @@ import survey.backend.service.PoeService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/poe")
@@ -23,7 +24,7 @@ public class PoeController {
     @GetMapping("/{id}")
     public PoeFullDto findById(@PathVariable("id") long id){
         return poeService.findById(id)
-                .orElseThrow(() -> NoDataFoundError.withId("Poe", id));
+                .orElseThrow(() -> NoDataFoundError.withId("poe", id));
     }
 
     @PatchMapping("/{poeId}/addTrainee/{traineeId}")
@@ -32,7 +33,8 @@ public class PoeController {
             @PathVariable("traineeId") long traineeId)
     {
         return poeService.addTrainee(poeId, traineeId)
-                .orElseThrow(() -> NoDataFoundError.withIds("Poe or Trainee", poeId, traineeId));
+                .orElseThrow(() -> NoDataFoundError.withIds(
+                        Map.of("poe", poeId, "trainee", traineeId)));
     }
 
     @PatchMapping("/{poeId}/addTrainees")
@@ -41,6 +43,9 @@ public class PoeController {
             @RequestBody List<Long> traineeIds
     ){
         return poeService.addTrainees(poeId, traineeIds)
-                .orElseThrow(() -> NoDataFoundError.withIds("Poe or trainees",poeId));
+                .orElseThrow(() -> NoDataFoundError.withIds(
+                        Map.of("poe",poeId),
+                        Map.of("trainees", traineeIds)
+                ));
     }
 }

@@ -45,7 +45,7 @@ public class TraineeController {
         if (optTrainee.isPresent()){
             return optTrainee.get();
         } else {
-            throw NoDataFoundError.withId("Trainee", id);
+            throw NoDataFoundError.withId("trainee", id);
         }
         // NB: can be refactored with Optional.orElseThrow
     }
@@ -63,13 +63,13 @@ public class TraineeController {
             @RequestParam(name="fn", required = false) String firstname
     ){
         if (lastname == null && firstname == null) {
-            throw new BadRequestError("search with no args not permitted"); // 400 Bad Request
+            throw new BadRequestError("search with no criteria is not allowed"); // 400 Bad Request
         }
 
         var traineesFound = traineeService.search(lastname, firstname); // Service results
 
         if (traineesFound.size() == 0) {
-            throw NoDataFoundError.noResults("Trainee search",
+            throw NoDataFoundError.noResults("trainee search",
                     String.format("lastname=%s, firstname=%s", lastname, firstname));
         }
 
@@ -97,7 +97,7 @@ public class TraineeController {
     @PutMapping
     public TraineeDto update(@Valid @RequestBody TraineeDto traineeDto) {
         return traineeService.update(traineeDto)
-                .orElseThrow(() -> NoDataFoundError.withId("Trainee", traineeDto.getId()));
+                .orElseThrow(() -> NoDataFoundError.withId("trainee", traineeDto.getId()));
     }
 
     /**
@@ -109,7 +109,7 @@ public class TraineeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remove(@PathVariable("id") long id) {
         if (!traineeService.remove(id)) {
-            throw NoDataFoundError.withId("Trainee", id);
+            throw NoDataFoundError.withId("trainee", id);
         }
     }
 
