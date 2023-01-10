@@ -7,6 +7,8 @@ import survey.backend.enums.Level;
 import survey.backend.enums.PoeType;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter @Setter
 @Entity
@@ -25,4 +27,11 @@ public class Survey {
     @Enumerated(EnumType.STRING)
     @Column(length = 4)
     private PoeType poeType;
+
+    @ManyToMany
+    @JoinTable(name = "survey_contains_question",
+            joinColumns = @JoinColumn(name = "survey_id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id")
+    )
+    private Set<Question> questions = new HashSet<>();
 }
